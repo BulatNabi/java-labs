@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Main {
+public class Laba1 {
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Введите числа через пробел в аргументах командной строки.");
