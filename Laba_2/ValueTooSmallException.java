@@ -1,4 +1,3 @@
-// Исключение 5: значение меньше допустимого минимума
 public class ValueTooSmallException extends Exception {
     private final int value;
     private final int minValue;

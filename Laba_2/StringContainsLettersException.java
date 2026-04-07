@@ -1,4 +1,3 @@
-// Исключение 9: строка содержит буквы (не является числом)
 public class StringContainsLettersException extends Exception {
     private final String input;
 

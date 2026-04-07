@@ -1,4 +1,3 @@
-// Исключение 4: в массиве элементов больше указанного
 public class TooManyElementsException extends Exception {
     private final int actual;
     private final int limit;
