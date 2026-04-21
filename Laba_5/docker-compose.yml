@@ -1,0 +1,57 @@
+services:
+  prepare:
+    build: .
+    container_name: laba5-prepare
+    command:
+      - sh
+      - -c
+      - |
+        mkdir -p /share/classes/client &&
+        cp /app/client/client/SplitTask.class /share/classes/client/ &&
+        echo '[prepare] share populated'
+    volumes:
+      - ./share:/share
+
+  server:
+    build: .
+    container_name: laba5-server
+    command:
+      - sh
+      - -c
+      - |
+        CLASSPATH=/app/compute.jar rmiregistry 1099 &
+        sleep 2
+        exec java \
+          -Djava.security.manager=allow \
+          -Djava.security.policy=/share/server.policy \
+          -Djava.rmi.server.useCodebaseOnly=false \
+          -Djava.rmi.server.hostname=server \
+          -cp /app/compute.jar:/app/server \
+          engine.ComputeEngine 1099
+    volumes:
+      - ./share:/share
+    networks:
+      - rmi-net
+
+  client:
+    build: .
+    container_name: laba5-client
+    entrypoint:
+      - java
+      - -Djava.security.manager=allow
+      - -Djava.security.policy=/app/client.policy
+      - -Djava.rmi.server.codebase=file:/share/classes/
+      - -Djava.rmi.server.useCodebaseOnly=false
+      - -cp
+      - /app/compute.jar:/app/client
+      - client.ClientMain
+    volumes:
+      - ./share:/share
+    networks:
+      - rmi-net
+    depends_on:
+      - server
+
+networks:
+  rmi-net:
+    driver: bridge

@@ -1,0 +1,45 @@
+services:
+  server:
+    build: .
+    container_name: udp-server
+    command: ["UDPServer", "9000", "/logs/server.log"]
+    ports:
+      - "9000:9000/udp"
+    volumes:
+      - ./logs:/logs
+    networks:
+      - app-net
+
+  client1:
+    build: .
+    container_name: udp-client
+    command: ["UDPClient"]
+    stdin_open: true
+    tty: true
+    working_dir: /app
+    volumes:
+      - ./config:/app/config
+      - ./logs:/logs
+    networks:
+      - app-net
+    depends_on:
+      - server
+
+  client2:
+    build: .
+    container_name: udp-client
+    command: ["UDPClient"]
+    stdin_open: true
+    tty: true
+    working_dir: /app
+    volumes:
+      - ./config:/app/config
+      - ./logs:/logs
+    networks:
+      - app-net
+    depends_on:
+      - server
+
+networks:
+  app-net:
+    driver: bridge
