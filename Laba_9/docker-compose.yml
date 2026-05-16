@@ -1,0 +1,14 @@
+services:
+  derby:
+    build: .
+    container_name: laba9-derby
+    ports:
+      - "1527:1527"
+    volumes:
+      - ./derby-data:/derby/data
+    command:
+      - sh
+      - -c
+      - |
+        cd /derby/data &&
+        java -jar /derby/lib/derbyrun.jar server start -h 0.0.0.0 -p 1527
