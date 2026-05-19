@@ -1,7 +1,9 @@
 package univapp;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
@@ -15,8 +17,9 @@ public class Defaults {
             props = new Properties();
             Path p = Path.of(FILE);
             if (Files.exists(p)) {
-                try (FileInputStream fis = new FileInputStream(FILE)) {
-                    props.load(fis);
+                try (Reader r = new InputStreamReader(
+                        Files.newInputStream(p), StandardCharsets.UTF_8)) {
+                    props.load(r);
                 } catch (IOException e) {
                     System.err.println("Не удалось прочитать defaults.properties: " + e.getMessage());
                 }

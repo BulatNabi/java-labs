@@ -1,4 +1,4 @@
-package univapp;
+гpackage univapp;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -25,7 +25,7 @@ public class Main extends JFrame {
     private final JTabbedPane tabs = new JTabbedPane();
 
     public Main() {
-        super("Лаба 9 — Учебные аудитории (вариант 46 / д)");
+        super("Лаба 9 — Учебные аудитории");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -103,15 +103,18 @@ public class Main extends JFrame {
         keyRow.add(keyField);
 
         JPanel queries = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton fioListBtn = new JButton("Список ФИО (П.7=1, П.8=0)");
-        JButton phoneBookBtn = new JButton("Телефонный справочник (вариант д)");
-        JButton avgAreaBtn = new JButton("Средняя площадь по ответственным (вариант д)");
+        JButton fioListBtn = new JButton("Список ФИО");
+        JButton phoneBookBtn = new JButton("Телефонный справочник");
+        JButton avgAreaBtn = new JButton("Средняя площадь по ответственным");
+        JButton resetDbBtn = new JButton("Сброс БД к умолчанию");
         fioListBtn.addActionListener(e -> queryFioList());
         phoneBookBtn.addActionListener(e -> queryPhoneBook());
         avgAreaBtn.addActionListener(e -> queryAverageArea());
+        resetDbBtn.addActionListener(e -> resetDatabase());
         queries.add(fioListBtn);
         queries.add(phoneBookBtn);
         queries.add(avgAreaBtn);
+        queries.add(resetDbBtn);
 
         outputArea.setEditable(false);
         outputArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
@@ -327,6 +330,24 @@ public class Main extends JFrame {
             sb.append("Ошибка: ").append(e.getMessage());
         }
         outputArea.setText(sb.toString());
+    }
+
+    private void resetDatabase() {
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Полностью очистить БД и заполнить значениями из seed-data.txt?\n" +
+                        "ВСЕ текущие данные будут потеряны.",
+                "Сброс БД", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (confirm != JOptionPane.YES_OPTION) return;
+
+        try {
+            Seed.resetDatabase();
+            reloadResponsibles();
+            reloadClassrooms();
+            outputArea.setText("БД сброшена к значениям по умолчанию из файла seed-data.txt\n" +
+                    "Транзакция: DELETE * 2 + INSERT * N в одной транзакции");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Ошибка сброса: " + e.getMessage());
+        }
     }
 
     public static void main(String[] args) {
