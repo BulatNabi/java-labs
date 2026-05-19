@@ -8,7 +8,7 @@
 <body>
 
 <jsp:useBean id="calc" scope="session" class="jspappl.Calculator" />
-<jsp:setProperty name="calc" property="fio" value="Набиуллин Булат Айдарович" />
+<jsp:setProperty name="calc" property="fio" value="Набиуллин Булат Раязович" />
 
 <h1>Раз</h1>
 
